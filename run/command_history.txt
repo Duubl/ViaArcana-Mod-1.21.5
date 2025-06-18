@@ -1,0 +1,50 @@
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/time set day
+/gamemode survival
+/playsound via_arcana:spell_hit_3
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/playsound via_arcana:spell_hit_3
+/time set day
+/playsound via_arcana:spell_hit_3
+/gamerule doDaylightCycle false
+/playsound via_arcana:spell_hit_3
+/gamemode survival
+/gamemode creative
+/weather clear
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/time set day
+/gamerule doDaylightCycle false
+/particle via_arcana:colored_magic_particle
+/particle via_arcana:colored_magic_particle ~ ~ ~
+/gamemode creative
+/particle via_arcana:colored_magic_particle
+/particle via_arcana:colored_magic_particle ~ ~ ~

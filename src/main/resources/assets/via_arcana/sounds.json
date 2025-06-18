@@ -1,0 +1,68 @@
+{
+    "spell_hit_3": {
+        "sounds": [
+            {
+                "name": "via_arcana:spell/hit/spell_hit_3",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "stream": false
+            }
+        ],
+        "subtitle": "subtitle.via_arcana.spell_hit"
+    },
+    "spell_cast_1": {
+        "sounds": [
+            {
+                "name": "via_arcana:spell/cast/cast_1",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "stream": false
+            }
+        ],
+        "subtitle": "subtitle.via_arcana.spell_cast"
+    },
+    "spell_cast_2": {
+        "sounds": [
+            {
+                "name": "via_arcana:spell/cast/cast_2",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "stream": false
+            }
+        ],
+        "subtitle": "subtitle.via_arcana.spell_cast"
+    },
+    "spell_cast_3": {
+        "sounds": [
+            {
+                "name": "via_arcana:spell/cast/cast_3",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "stream": false
+            }
+        ],
+        "subtitle": "subtitle.via_arcana.spell_cast"
+    },
+    "spell_cast_4": {
+        "sounds": [
+            {
+                "name": "via_arcana:spell/cast/cast_4",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "stream": false
+            }
+        ],
+        "subtitle": "subtitle.via_arcana.spell_cast"
+    },
+    "spell_cast_5": {
+        "sounds": [
+            {
+                "name": "via_arcana:spell/cast/cast_5",
+                "volume": 1.0,
+                "pitch": 1.0,
+                "stream": false
+            }
+        ],
+        "subtitle": "subtitle.via_arcana.spell_cast"
+    }
+} 

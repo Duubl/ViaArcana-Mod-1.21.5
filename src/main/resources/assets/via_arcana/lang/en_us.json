@@ -1,0 +1,26 @@
+{
+  "itemGroup.via_arcana_accessories": "Via Arcana Accessories",
+  "itemGroup.via_arcana_materials": "Via Arcana Materials",
+  "itemGroup.via_arcana_magic_weapons": "Via Arcana Magic Weapons",
+
+  "tooltip.via_arcana.agility_scarf": "Allows the player to dash",
+  "tooltip.via_arcana.speed_boots": "Allows the player to run faster",
+  "tooltip.via_arcana.jump_boost": "Allows the player to leap higher",
+  "tooltip.via_arcana.snow_shoes": "Prevents falling into powder snow",
+  "tooltip.via_arcana.increase_mana": "Permanently increases mana",
+
+  "usage.tooltip.via_arcana.double_tap": "Double tap in a direction",
+
+  "item.via_arcana.haste_treads": "Haste Treads",
+  "item.via_arcana.moon_shoes": "Moon Shoes",
+  "item.via_arcana.moonstrider_boots": "Moonstrider Boots",
+  "item.via_arcana.snow_shoes": "Snow Shoes",
+  "item.via_arcana.agility_scarf": "Agility Scarf",
+  "item.via_arcana.mana_shard": "Mana Shard",
+  "item.via_arcana.mana_crystal": "Mana Crystal",
+
+  "item.via_arcana.wand_of_splinters": "Wand of Splinters",
+
+  "subtitle.via_arcana.spell_hit": "Spell Impact",
+  "subtitle.via_arcana.spell_cast": "Spell Cast"
+}

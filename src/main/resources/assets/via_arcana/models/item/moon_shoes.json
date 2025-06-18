@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "via_arcana:item/accessories/moon_shoes"
+  }
+}

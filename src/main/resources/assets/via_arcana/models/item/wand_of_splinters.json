@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "via_arcana:item/magic_weapons/wand_of_splinters"
+  }
+}
