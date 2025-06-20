@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "via_arcana:item/melee/slab_sword"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [45, 90, 0],
+      "translation": [0, 16, 0],
+      "scale": [2, 2, 2]
+    }
+  }
+}
