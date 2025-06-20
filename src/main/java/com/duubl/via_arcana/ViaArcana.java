@@ -54,6 +54,7 @@ public class ViaArcana
     public static final DeferredRegister<CreativeModeTab> ACCESSORIES_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<CreativeModeTab> MATERIALS_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<CreativeModeTab> MAGIC_WEAPONS_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<CreativeModeTab> MELEE_WEAPONS_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
 
@@ -78,7 +79,6 @@ public class ViaArcana
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MATERIALS = MATERIALS_TAB.register("via_arcana_materials", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.via_arcana_materials"))
-            .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> ModItems.MANA_SHARD.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(ModItems.MANA_SHARD.get());
@@ -87,10 +87,16 @@ public class ViaArcana
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAGIC_WEAPONS = MAGIC_WEAPONS_TAB.register("via_arcana_magic_weapons", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.via_arcana_magic_weapons"))
-            .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> ModItems.WAND_OF_SPLINTERS.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(ModItems.WAND_OF_SPLINTERS.get());
+            }).build());
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MELEE_WEAPONS = MELEE_WEAPONS_TAB.register("via_arcana_melee_weapons", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.via_arcana_melee_weapons"))
+            .icon(() -> ModItems.THE_SLAB.get().getDefaultInstance())
+            .displayItems((parameters, output) -> {
+                output.accept(ModItems.THE_SLAB.get());
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -106,6 +112,7 @@ public class ViaArcana
         ACCESSORIES_TAB.register(modEventBus);
         MATERIALS_TAB.register(modEventBus);
         MAGIC_WEAPONS_TAB.register(modEventBus);
+        MELEE_WEAPONS_TAB.register(modEventBus);
 
         DATA_COMPONENTS.register(modEventBus);
         ManaComponentAttachment.register(modEventBus);
