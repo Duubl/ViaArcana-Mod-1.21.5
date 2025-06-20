@@ -1,8 +1,11 @@
 package com.duubl.via_arcana.items;
 
+import java.util.function.Supplier;
+
 import com.duubl.via_arcana.ViaArcana;
 import com.duubl.via_arcana.items.accessories.*;
 import com.duubl.via_arcana.items.weapons.magic.*;
+import com.duubl.via_arcana.items.weapons.melee.TheSlab;
 import com.duubl.via_arcana.items.materials.ManaCrystal;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -24,4 +27,7 @@ public class ModItems {
     // Weapons
     // Magic
     public static final DeferredItem<WandOfSplinters> WAND_OF_SPLINTERS = ITEMS.registerItem("wand_of_splinters", WandOfSplinters::new);
+
+    // Melee
+    public static final Supplier<TheSlab> THE_SLAB = ITEMS.registerItem("the_slab", TheSlab::new);
 }

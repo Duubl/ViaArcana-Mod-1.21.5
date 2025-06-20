@@ -7,10 +7,10 @@ public interface IMana {
 
     void addMana(int amount);
 
-    boolean consumeMana(int amount);
+    boolean consumeMana(double amount);
 
     int getMaxMana();
 
-    float getRegenRate();
-    void setRegenRate(float rate);
+    double getRegenRate();
+    void setRegenRate(double rate);
 }

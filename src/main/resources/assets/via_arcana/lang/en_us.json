@@ -21,6 +21,15 @@
 
   "item.via_arcana.wand_of_splinters": "Wand of Splinters",
 
+  "item.via_arcana.the_slab": "The Slab",
+
   "subtitle.via_arcana.spell_hit": "Spell Impact",
-  "subtitle.via_arcana.spell_cast": "Spell Cast"
+  "subtitle.via_arcana.spell_cast": "Spell Cast",
+
+  "attribute.name.generic.magic_damage": "Magic Damage",
+  "attribute.name.generic.knockback": "Knockback",
+  "attribute.name.generic.critical_strike_chance": "Critical Strike Chance",
+  "attribute.name.generic.projectile_speed": "Projectile Speed",
+  "attribute.name.generic.mana_cost": "Mana Cost",
+  "attribute.name.generic.cast_speed": "Cast Speed"
 }

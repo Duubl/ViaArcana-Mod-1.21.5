@@ -10,8 +10,8 @@ import net.minecraft.network.codec.StreamCodec;
 public class ManaComponent implements IMana {
     private int mana;
     private int maxMana;
-    private float regenRate;
-    private float fractionalMana = 0.0f;  // Add this field to track fractional mana
+    private double regenRate;
+    private double fractionalMana = 0.0f;  // Add this field to track fractional mana
     private static int manaCap = 200;  // Default cap, can be changed by items later
     private int regenCooldown = 0;  // Tracks ticks until mana regen can start
     private static final int REGEN_COOLDOWN_DURATION = 40;  // 2 seconds (40 ticks)
@@ -20,19 +20,19 @@ public class ManaComponent implements IMana {
     public static final Codec<ManaComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("mana").forGetter(ManaComponent::getMana),
             Codec.INT.fieldOf("maxMana").forGetter(ManaComponent::getMaxMana),
-            Codec.FLOAT.fieldOf("regenRate").forGetter(ManaComponent::getRegenRate)
+            Codec.DOUBLE.fieldOf("regenRate").forGetter(ManaComponent::getRegenRate)
     ).apply(instance, ManaComponent::new));
 
     // --- NEW: StreamCodec for network synchronization ---
     public static final StreamCodec<FriendlyByteBuf, ManaComponent> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ManaComponent::getMana,
             ByteBufCodecs.INT, ManaComponent::getMaxMana,
-            ByteBufCodecs.FLOAT, ManaComponent::getRegenRate,
+            ByteBufCodecs.DOUBLE, ManaComponent::getRegenRate,
             ManaComponent::new
     );
 
     // Constructor used by Codec/StreamCodec
-    public ManaComponent(int mana, int maxMana, float regenRate) {
+    public ManaComponent(int mana, int maxMana, double regenRate) {
         this.mana = mana;
         this.maxMana = maxMana;
         this.regenRate = regenRate;
@@ -60,8 +60,8 @@ public class ManaComponent implements IMana {
         setMana(this.mana + amount); 
     }
 
-    public void addFractionalMana(float amount) {
-        fractionalMana += amount;
+    public void addFractionalMana(double amount) {
+            fractionalMana += amount;
         if (fractionalMana >= 1.0f) {
             int wholeMana = (int) fractionalMana;
             fractionalMana -= wholeMana;
@@ -70,7 +70,7 @@ public class ManaComponent implements IMana {
     }
 
     @Override
-    public boolean consumeMana(int amount) {
+    public boolean consumeMana(double amount) {
         if (this.mana >= amount) {
             this.mana -= amount;
             this.regenCooldown = REGEN_COOLDOWN_DURATION;
@@ -92,7 +92,7 @@ public class ManaComponent implements IMana {
         CompoundTag tag = new CompoundTag();
         tag.putInt("Mana", mana);
         tag.putInt("MaxMana", maxMana);
-        tag.putFloat("RegenRate", regenRate);
+        tag.putDouble("RegenRate", regenRate);
         return tag;
     }
 
@@ -103,9 +103,10 @@ public class ManaComponent implements IMana {
     }
 
     @Override
-    public float getRegenRate() { return regenRate; }
+    public double getRegenRate() { return regenRate; }
+
     @Override
-    public void setRegenRate(float rate) { this.regenRate = rate; }
+    public void setRegenRate(double rate) { this.regenRate = rate; }
 
     public ManaComponent copy() {
         return new ManaComponent(this.mana, this.maxMana, this.regenRate);

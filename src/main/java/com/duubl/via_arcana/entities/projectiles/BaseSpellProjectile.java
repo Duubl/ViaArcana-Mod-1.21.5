@@ -1,6 +1,7 @@
 package com.duubl.via_arcana.entities.projectiles;
 
 import com.duubl.via_arcana.entities.ModEntities;
+import com.duubl.via_arcana.init.ModAttributes;
 import com.duubl.via_arcana.items.weapons.magic.MagicWeapon;
 import com.duubl.via_arcana.particles.ModParticles;
 import com.duubl.via_arcana.sounds.ModSounds;
@@ -15,25 +16,18 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class BaseSpellProjectile extends AbstractHurtingProjectile {
-    // Define all the data accessors
-    private static final EntityDataAccessor<Float> DAMAGE = 
-        SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> PROJECTILE_SPEED = 
-        SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> KNOCKBACK = 
-        SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> CRITICAL_STRIKE_CHANCE = 
-        SynchedEntityData.defineId(BaseSpellProjectile.class, EntityDataSerializers.FLOAT);
 
     private ParticleOptions impactParticle;
     private ParticleOptions trailParticle;
@@ -53,55 +47,6 @@ public class BaseSpellProjectile extends AbstractHurtingProjectile {
         // Initialize default particles
         this.trailParticle = ModParticles.COLORED_MAGIC_PARTICLE.get();
         this.impactParticle = ParticleTypes.CLOUD;
-        
-        // Get all values from the wand
-        if (player.getMainHandItem().getItem() instanceof MagicWeapon wand) {
-            this.setDamage(wand.getDamage());
-            this.setProjectileSpeed(wand.getProjectileSpeed());
-            this.setKnockback(wand.getKnockback());
-            this.setCriticalStrikeChance(wand.getCriticalStrikeChance());
-        }
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DAMAGE, 0.0f);
-        builder.define(PROJECTILE_SPEED, 0.0f);
-        builder.define(KNOCKBACK, 0.0f);
-        builder.define(CRITICAL_STRIKE_CHANCE, 0.0f);
-    }
-
-    // Getters and setters for all properties
-    public void setDamage(float damage) {
-        this.entityData.set(DAMAGE, damage);
-    }
-
-    public float getDamage() {
-        return this.entityData.get(DAMAGE);
-    }
-
-    public void setProjectileSpeed(float speed) {
-        this.entityData.set(PROJECTILE_SPEED, speed);
-    }
-
-    public float getProjectileSpeed() {
-        return this.entityData.get(PROJECTILE_SPEED);
-    }
-
-    public void setKnockback(float knockback) {
-        this.entityData.set(KNOCKBACK, knockback);
-    }
-
-    public float getKnockback() {
-        return this.entityData.get(KNOCKBACK);
-    }
-
-    public void setCriticalStrikeChance(float chance) {
-        this.entityData.set(CRITICAL_STRIKE_CHANCE, chance);
-    }
-
-    public float getCriticalStrikeChance() {
-        return this.entityData.get(CRITICAL_STRIKE_CHANCE);
     }
 
     @Override
@@ -112,24 +57,30 @@ public class BaseSpellProjectile extends AbstractHurtingProjectile {
                 float randomPitch = 0.75f + this.level().getRandom().nextFloat() * 0.5f; // Random between 0.75 and 1.25
                 this.playSound(ModSounds.SPELL_HIT_3.get(), 1.0f, randomPitch);
 
-                // Calculate if this hit is a critical strike
-                boolean isCritical = this.level().getRandom().nextFloat() < this.getCriticalStrikeChance();
-                float damage = isCritical ? this.getDamage() * 2.0f : this.getDamage();
+                // Get the weapon the owner is holding
+                ItemStack weaponStack = null;
+                if (owner instanceof Player player) {
+                    weaponStack = player.getMainHandItem();
+                }
+
+                // Calculate if this hit is a critical strike using the proper method
+                double critChance = getCriticalStrikeChanceFromWeapon(weaponStack);
+                boolean isCritical = this.level().getRandom().nextFloat() < critChance;
+                
+                // Get damage from the weapon using the proper method
+                double damage = getDamageFromWeapon(weaponStack);
+                if (isCritical) {
+                    damage *= 2.0; // Critical hit doubles damage
+                }
 
                 DamageSource damageSource = this.damageSources().indirectMagic(this, owner);
-                target.hurtServer(serverLevel, damageSource, damage);
+                target.hurtServer(serverLevel, damageSource, (float) damage);
 
-                // Calculate knockback direction
-                Vec3 knockbackDir = this.getDeltaMovement().normalize();
-
-                // Apply knockback with the wand's knockback value
-                target.setDeltaMovement(
-                    target.getDeltaMovement().add(
-                        knockbackDir.x * this.getKnockback(),
-                        knockbackDir.y * this.getKnockback(),
-                        knockbackDir.z * this.getKnockback()
-                    )
-                );
+                // Get knockback from the weapon using the proper method
+                double knockback = getKnockbackFromWeapon(weaponStack);
+                if (knockback > 0) {
+                    target.knockback((float) knockback, owner.getX() - target.getX(), owner.getZ() - target.getZ());
+                }
 
                 // Spawn critical hit particles if it was a critical strike
                 if (isCritical) {
@@ -158,6 +109,54 @@ public class BaseSpellProjectile extends AbstractHurtingProjectile {
             serverLevel.sendParticles(getImpactParticle(), x, y, z, 25, 0.25D, 0.25D, 0.25D, 0.05D);
             this.discard();
         }
+    }
+
+    public double getDamageFromWeapon(ItemStack weaponStack) {
+        if (weaponStack == null || weaponStack.isEmpty()) {
+            return 2.5; // Default damage
+        }
+        
+        final double[] totalDamage = {0.0};
+        
+        weaponStack.forEachModifier(EquipmentSlotGroup.MAINHAND, (attribute, modifier) -> {
+            if (attribute.is(ModAttributes.MAGIC_DAMAGE)) {
+                totalDamage[0] += modifier.amount();
+            }
+        });
+        
+        return totalDamage[0] > 0 ? totalDamage[0] : 2.5; // Fallback to default if no damage found
+    }
+
+    public double getKnockbackFromWeapon(ItemStack weaponStack) {
+        if (weaponStack == null || weaponStack.isEmpty()) {
+            return 0.5; // Default knockback
+        }
+        
+        final double[] totalKnockback = {0.0};
+        
+        weaponStack.forEachModifier(EquipmentSlotGroup.MAINHAND, (attribute, modifier) -> {
+            if (attribute.is(ModAttributes.KNOCKBACK)) {
+                totalKnockback[0] += modifier.amount();
+            }
+        });
+        
+        return totalKnockback[0];
+    }
+
+    public double getCriticalStrikeChanceFromWeapon(ItemStack weaponStack) {
+        if (weaponStack == null || weaponStack.isEmpty()) {
+            return 0.0; // Default no critical chance
+        }
+        
+        final double[] totalCritChance = {0.0};
+        
+        weaponStack.forEachModifier(EquipmentSlotGroup.MAINHAND, (attribute, modifier) -> {
+            if (attribute.is(ModAttributes.CRITICAL_STRIKE_CHANCE)) {
+                totalCritChance[0] += modifier.amount();
+            }
+        });
+        
+        return totalCritChance[0];
     }
     
     @Override

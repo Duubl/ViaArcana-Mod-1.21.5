@@ -2,7 +2,7 @@ package com.duubl.via_arcana;
 
 import com.duubl.via_arcana.client.ClientSetup;
 import com.duubl.via_arcana.entities.ModEntities;
-import com.duubl.via_arcana.init.ModDataComponents;
+import com.duubl.via_arcana.init.ModAttributes;
 import com.duubl.via_arcana.items.ModItems;
 import com.duubl.via_arcana.magic.ManaComponent;
 import com.duubl.via_arcana.network.handler.ManaEventHandler;
@@ -111,9 +111,9 @@ public class ViaArcana
         ManaComponentAttachment.register(modEventBus);
         ManaEventHandler.register(modEventBus);
         ModEntities.register(modEventBus);
-        ModDataComponents.register(modEventBus);
         ModSounds.register(modEventBus);
         ModParticles.register(modEventBus);
+        ModAttributes.register(modEventBus);
 
         modEventBus.addListener(ClientSetup::onClientSetup);
 

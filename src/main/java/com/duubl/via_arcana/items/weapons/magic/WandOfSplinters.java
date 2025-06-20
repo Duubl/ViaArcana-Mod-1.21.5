@@ -5,23 +5,34 @@ import com.duubl.via_arcana.magic.ManaComponent;
 import com.duubl.via_arcana.magic.ManaComponentAttachment;
 import com.duubl.via_arcana.network.packets.ManaUpdatePacket;
 import com.duubl.via_arcana.sounds.ModSounds;
-import com.duubl.via_arcana.init.ModDataComponents;
+import com.duubl.via_arcana.init.ModAttributes;
 import com.duubl.via_arcana.particles.ColoredMagicParticle;
 import com.duubl.via_arcana.particles.ModParticles;
 
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.phys.Vec3;
 
 public class WandOfSplinters extends MagicWeapon {
+
+    private static final float BASE_DAMAGE = 2.5f;
+    private static final float BASE_PROJECTILE_SPEED = 1.0f;
+    private static final float BASE_KNOCKBACK = 0.5f;
+    private static final float BASE_CRITICAL_STRIKE_CHANCE = 0.05f;
+    private static final float BASE_MANA_COST = 5f;
+    private static final float BASE_CAST_SPEED = 60f;
 
     private float r = 0.282F;
     private float g = 0.282F;
@@ -29,16 +40,21 @@ public class WandOfSplinters extends MagicWeapon {
     private float scale = 0.25F;
 
     public WandOfSplinters(Properties properties) {
-        super(properties);
-        // Set specific values for this wand using the data components
-        this.setDamage(2.5f);
-        this.setProjectileSpeed(1.0f);
-        this.setKnockback(0.5f);
-        this.setCriticalStrikeChance(0.05f);
-        this.setManaCost(5);
-        this.setCastSpeed(60); // Once a second
+        super(properties.attributes(createAttributes()));
+
         this.setTrailParticle(ModParticles.COLORED_MAGIC_PARTICLE.get());
         this.setImpactParticle(ParticleTypes.CLOUD);
+    }
+
+    public static ItemAttributeModifiers createAttributes() {
+        return ItemAttributeModifiers.builder()
+            .add(ModAttributes.MAGIC_DAMAGE, new AttributeModifier(ResourceLocation.withDefaultNamespace("weapon.magic_damage"), BASE_DAMAGE, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+            .add(ModAttributes.PROJECTILE_SPEED, new AttributeModifier(ResourceLocation.withDefaultNamespace("weapon.projectile_speed"), BASE_PROJECTILE_SPEED, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+            .add(ModAttributes.KNOCKBACK, new AttributeModifier(ResourceLocation.withDefaultNamespace("weapon.knockback"), BASE_KNOCKBACK, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+            .add(ModAttributes.CRITICAL_STRIKE_CHANCE, new AttributeModifier(ResourceLocation.withDefaultNamespace("weapon.critical_strike"), BASE_CRITICAL_STRIKE_CHANCE, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+            .add(ModAttributes.MANA_COST, new AttributeModifier(ResourceLocation.withDefaultNamespace("weapon.mana_cost"), BASE_MANA_COST, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+            .add(ModAttributes.CAST_SPEED, new AttributeModifier(ResourceLocation.withDefaultNamespace("weapon.cast_speed"), BASE_CAST_SPEED, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+            .build();
     }
 
     @Override
@@ -51,7 +67,7 @@ public class WandOfSplinters extends MagicWeapon {
 
             ManaComponent manaComponent = player.getData(ManaComponentAttachment.MANA_COMPONENT);
             if (manaComponent != null) {
-                boolean success = manaComponent.consumeMana(this.getManaCost());
+                boolean success = manaComponent.consumeMana(getManaCostFromItem(player.getItemInHand(hand)));
                 if (success) {
                     // Set particle color for this wand (light blue)
                     ColoredMagicParticle.Provider.setColor(r, g, b);
@@ -72,12 +88,6 @@ public class WandOfSplinters extends MagicWeapon {
                     BaseSpellProjectile projectile = new BaseSpellProjectile(level, player, dirX, dirY, dirZ);
                     projectile.setImpactParticle(getImpactParticle());
                     projectile.setTrailParticle(getTrailParticle());
-                    
-                    // Set projectile properties from the wand's data components
-                    projectile.setDamage(this.getDamage());
-                    projectile.setProjectileSpeed(this.getProjectileSpeed());
-                    projectile.setKnockback(this.getKnockback());
-                    projectile.setCriticalStrikeChance(this.getCriticalStrikeChance());
                     
                     // Set the initial position to the player's eye level
                     projectile.setPos(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
