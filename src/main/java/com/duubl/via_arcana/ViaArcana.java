@@ -12,7 +12,6 @@ import com.duubl.via_arcana.network.packets.ManaUpdatePacket;
 import com.duubl.via_arcana.particles.ColoredMagicParticle;
 import com.duubl.via_arcana.particles.ModParticles;
 import com.duubl.via_arcana.sounds.ModSounds;
-
 import net.minecraft.core.component.DataComponentType;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
