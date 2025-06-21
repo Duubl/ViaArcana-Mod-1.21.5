@@ -29,4 +29,6 @@ public class TheSlab extends MeleeWeapon {
         .add(ModAttributes.CRITICAL_STRIKE_CHANCE, new AttributeModifier(ResourceLocation.withDefaultNamespace("weapon.critical_strike_chance"), BASE_CRITICAL_STRIKE_CHANCE, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
         .build();
     }
+
+    // TODO: Add charged shockwave ability on right click
 }
