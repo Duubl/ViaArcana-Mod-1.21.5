@@ -1,14 +1,20 @@
 package com.duubl.via_arcana.items.weapons.melee;
 
 import com.duubl.via_arcana.init.ModAttributes;
+import com.duubl.via_arcana.network.NetworkHandler;
+import com.duubl.via_arcana.network.packets.PlayAnimationPacket;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.Level;
 
 public class TheSlab extends MeleeWeapon {
 
@@ -30,5 +36,23 @@ public class TheSlab extends MeleeWeapon {
         .build();
     }
 
-    // TODO: Add charged shockwave ability on right click
+    // TODO: Add charged shockwave ability on right click. 
+    // Animation plays, but the player head goes invisible. Animation is also too slow. Add charge time.
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        
+        // Only trigger on main hand
+        if (hand == InteractionHand.MAIN_HAND) {
+            // Send packet to server to broadcast animation
+            if (level.isClientSide()) {
+                NetworkHandler.sendToServer(new PlayAnimationPacket());
+            }
+            
+            // Return success to prevent item use (like eating)
+            return InteractionResult.SUCCESS;
+        }
+        
+        return InteractionResult.PASS;
+    }
 }

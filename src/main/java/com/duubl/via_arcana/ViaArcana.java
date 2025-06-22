@@ -6,9 +6,11 @@ import com.duubl.via_arcana.init.ModAttributes;
 import com.duubl.via_arcana.items.ModItems;
 import com.duubl.via_arcana.magic.ManaComponent;
 import com.duubl.via_arcana.network.handler.ManaEventHandler;
+import com.duubl.via_arcana.network.packets.AnimationBroadcastPacket;
 import com.duubl.via_arcana.network.packets.LeapPacket;
 import com.duubl.via_arcana.network.handler.ServerPayloadHandler;
 import com.duubl.via_arcana.network.packets.ManaUpdatePacket;
+import com.duubl.via_arcana.network.packets.PlayAnimationPacket;
 import com.duubl.via_arcana.particles.ColoredMagicParticle;
 import com.duubl.via_arcana.particles.ModParticles;
 import com.duubl.via_arcana.sounds.ModSounds;
@@ -38,6 +40,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import static com.duubl.via_arcana.items.ModItems.ITEMS;
 import com.duubl.via_arcana.magic.ManaComponentAttachment;
+import com.duubl.via_arcana.network.handler.PlayAnimationHandler;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(ViaArcana.MODID)
@@ -186,6 +189,16 @@ public class ViaArcana
                 ManaUpdatePacket.TYPE,
                 ManaUpdatePacket.CODEC,
                 ManaUpdatePacket.Handler::handle
+        );
+        registrar.playToServer(
+            PlayAnimationPacket.TYPE,
+            PlayAnimationPacket.CODEC,
+            PlayAnimationHandler::handlePacket
+        );
+        registrar.playToClient(
+            AnimationBroadcastPacket.TYPE,
+            AnimationBroadcastPacket.CODEC,
+            PlayAnimationHandler::handleBroadcastPacket
         );
     }
 }
